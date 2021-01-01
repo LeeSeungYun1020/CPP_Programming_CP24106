@@ -7,6 +7,7 @@ class Time {
 public:
 	Time() : Time(0, 0, 0) {}
 	Time(int h, int m, int s) : hour(h), minute(m), second(s) {}
+
 	void timePrn() const {
 		std::cout << hour << "½Ã " << minute << "ºÐ " << second << "ÃÊ" << std::endl;
 	}
