@@ -2,60 +2,61 @@
 using namespace std;
 
 class BasePrinter {
-	string modelName;
-protected:
-	int paper;
+	string model;
+	int availableCount;
+	int printedCount;
 public:
-	BasePrinter(string modelName, int paper = 0): modelName(modelName), paper(paper) {}
+	BasePrinter(string model, int paper = 0) : model(model), availableCount(paper), printedCount(0) {}
 
 	virtual void print(int pages) {
-		if (paper - pages < 0) {
+		if (availableCount - pages < 0) {
 			throw("용지");
 		}
+		cout << "프린트하였습니다." << endl;
+		availableCount -= pages;
+		printedCount += pages;
 	}
 
 	virtual void show() {
-		cout << modelName << " : 남은 종이 " << paper << "장";
+		cout << model << " : 남은 종이 " << availableCount << "장";
 	}
 };
 
 class InkJetPrinter : public BasePrinter {
-	int ink;
+	int availableInk;
 public:
-	InkJetPrinter(string modelName, int paper, int ink): BasePrinter(modelName, paper), ink(ink) {}
+	InkJetPrinter(string model, int paper, int ink) : BasePrinter(model, paper), availableInk(ink) {}
 
 	void print(int pages) override {
-		BasePrinter::print(pages);
-		if (ink - pages < 0) {
+		if (availableInk - pages < 0) {
 			throw("잉크");
 		}
-		paper -= pages;
-		ink -= pages;
+		BasePrinter::print(pages);
+		availableInk -= pages;
 	}
 
 	void show() override {
 		BasePrinter::show();
-		cout << ", 남은 잉크 " << ink;
+		cout << ", 남은 잉크 " << availableInk;
 	}
 };
 
 class LaserPrinter : public BasePrinter {
-	int toner;
+	int availableToner;
 public:
-	LaserPrinter(string modelName, int paper, int toner) : BasePrinter(modelName, paper), toner(toner) {}
+	LaserPrinter(string model, int paper, int toner) : BasePrinter(model, paper), availableToner(toner) {}
 
 	void print(int pages) override {
-		BasePrinter::print(pages);
-		if (toner - pages < 0) {
+		if (availableToner - pages < 0) {
 			throw("토너");
 		}
-		paper -= pages;
-		toner -= pages;
+		BasePrinter::print(pages);
+		availableToner -= pages;
 	}
 
 	void show() override {
 		BasePrinter::show();
-		cout << ", 남은 토너 " << toner;
+		cout << ", 남은 토너 " << availableToner;
 	}
 };
 
@@ -67,7 +68,7 @@ void output(BasePrinter* p) {
 int main() {
 	InkJetPrinter* ip = new InkJetPrinter("Officejet V40", 5, 2);
 	LaserPrinter* lp = new LaserPrinter("SCX-6x45", 3, 20);
-	std::cout << "현재 작동중인 2 대의 프린터는 아래와 같다" << endl;
+	cout << "현재 작동중인 2 대의 프린터는 아래와 같다" << endl;
 	cout << "잉크젯 : ";
 	ip->show();
 	cout << endl;
